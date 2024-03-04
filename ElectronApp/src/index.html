@@ -1,44 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>App</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-</head>
-<body class="container bg-dark text-light">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body class="container bg-dark text-light">
     <h1>Lobby</h1>
 
     <div id="lobby">
+      <div id="name-div">
+        <label for="name">Name</label>
+        <input id="name-input" name="name" type="text" />
+        <button id="name-btn" class="btn btn-primary">Play</button>
+      </div>
+
+      <div id="play-div" class="d-none">
         <button id="find-match" class="btn btn-primary">Quick Play</button>
         <button id="create-match" class="btn btn-success">Create Match</button>
+      </div>
     </div>
-    
+
     <div id="match" class="d-none">
-        <div id="players"></div>
-        <button id="privacy-btn" class="btn btn-danger">Closed Lobby</button>
-        <div id="chat">
-            <div id="chat-box">
-                <p class="text-gray">Messages go here</p>
-            </div>
-            <form id="chat-form">
-                <input id="chat-input" type="text">
-                <button>Send</button>
-            </form>
+      <div id="players"></div>
+      <button id="privacy-btn" class="btn btn-danger">Closed Lobby</button>
+      <div id="chat">
+        <div id="chat-box">
+          <p class="text-gray">Messages go here</p>
         </div>
-        <button id="leave-btn" class="btn-danger">Leave</button>
+        <form id="chat-form">
+          <input id="chat-input" type="text" />
+          <button>Send</button>
+        </form>
+      </div>
+      <button id="leave-btn" class="btn-danger">Leave</button>
     </div>
 
     <div id="footer" class="text-light">
-        <p>Dependencies</p>
-        <ul>
-            <li>Node.js <span id="node-version"></span></li>
-            <li>Chromium <span id="chrome-version"></span></li>
-            <li>Electron <span id="electron-version"></span></li>
-        </ul>
+      <p>Dependencies</p>
+      <ul>
+        <li>Node.js <span id="node-version"></span></li>
+        <li>Chromium <span id="chrome-version"></span></li>
+        <li>Electron <span id="electron-version"></span></li>
+      </ul>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
     <script src="./renderer.js"></script>
-</body>
+  </body>
 </html>

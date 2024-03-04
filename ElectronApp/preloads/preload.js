@@ -5,6 +5,10 @@ let match = null
 
 window.addEventListener('DOMContentLoaded', () => {
   let lobbyDiv = document.querySelector('#lobby')
+  let playOptionsDiv = document.querySelector('#play-div')
+  let nameDiv = document.querySelector('#name-div')
+  let nameInput = document.querySelector('#name-input')
+  let nameBtn = document.querySelector('#name-btn')
   let createMatchBtn = document.querySelector("#create-match")
   let findMatchBtn = document.querySelector("#find-match")
 
@@ -25,39 +29,46 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   // Lobby
-  createMatchBtn.addEventListener("click", () => {
-    socket.emit("match", {action: "create"})
+  nameBtn.addEventListener('click', () => {
+    let name = nameInput.value
+    socket.emit('name', name)
   })
-  
+
+  createMatchBtn.addEventListener("click", () => {
+    socket.emit("match", { action: "create" })
+  })
+
   findMatchBtn.addEventListener("click", () => {
-    socket.emit("match", {action: "find"})
+    socket.emit("match", { action: "find" })
   })
 
   // Match
   chatForm.addEventListener("submit", (event) => {
     event.preventDefault()
 
-    socket.emit("match", {action: "chat", match, message: chatInput.value})
+    socket.emit("match", { action: "chat", match, message: chatInput.value })
     chatInput.value = ""
   })
 
   leaveBtn.addEventListener("click", () => {
-    socket.emit("match", {action: "leave", match})
+    socket.emit("match", { action: "leave", match })
+  })
+
+  socket.on('name', () => {
+    playOptionsDiv.classList.remove('d-none')
+    nameDiv.classList.add('d-none')
   })
 
   socket.on('match', (data) => {
     console.log(data)
-    if(data.action == "join")
-    {
+    if (data.action == "join") {
       chatBox.innerHTML = ''
       lobbyDiv.classList.add("d-none")
       matchDiv.classList.remove("d-none")
       match = data.match
-    }else if(data.action == "chat")
-    {
-      chatBox.innerHTML += `<p>${data.message}</p>`
-    } else if(data.action == "leave")
-    {
+    } else if (data.action == "chat") {
+      chatBox.innerHTML += `<p>${data.author}: ${data.message}</p>`
+    } else if (data.action == "leave") {
       lobbyDiv.classList.remove("d-none")
       matchDiv.classList.add("d-none")
       match = null
