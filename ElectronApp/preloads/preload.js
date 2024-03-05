@@ -54,6 +54,22 @@ window.addEventListener('DOMContentLoaded', () => {
     socket.emit("match", { action: "leave", match })
   })
 
+  privacyBtn.addEventListener("click", () => {
+    if(privacyBtn.value == "open"){
+      privacyBtn.value = "closed"
+      privacyBtn.innerText = "Lobby Is Closed"
+      privacyBtn.classList.remove('btn-success')
+      privacyBtn.classList.add('btn-danger')
+    } else {
+      privacyBtn.value = "open"
+      privacyBtn.innerText = "Lobby Is Open"
+      privacyBtn.classList.add('btn-success')
+      privacyBtn.classList.remove('btn-danger')
+    }
+
+    socket.emit("match", { action: "privacy", privacy: privacyBtn.value, match })
+  })
+
   socket.on('name', () => {
     playOptionsDiv.classList.remove('d-none')
     nameDiv.classList.add('d-none')
@@ -62,6 +78,9 @@ window.addEventListener('DOMContentLoaded', () => {
   socket.on('match', (data) => {
     console.log(data)
     if (data.action == "join") {
+      if(data.match.creator == socket.id) privacyBtn.classList.remove('d-none')
+      else privacyBtn.classList.add('d-none')
+
       chatBox.innerHTML = ''
       lobbyDiv.classList.add("d-none")
       matchDiv.classList.remove("d-none")

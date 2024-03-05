@@ -28,6 +28,8 @@ function joinMatch(socket, matchId) {
     if (!matchs[matchId]) return
     if (socket.rooms.size > 1) return
 
+    socket.matchId = matchId
+
     socket.join(matchId)
     socket.emit('match', {
         action: 'join',
@@ -35,18 +37,19 @@ function joinMatch(socket, matchId) {
     })
 }
 
-function leaveMatch(socket, matchId) {
-    let match = matchs[matchId]
+function leaveMatch(socket) {
+    let match = matchs[socket.matchId]
+    socket.matchId = null
     if (!match) return socket.emit('match', { action: 'leave' })
 
     if (socket.id == match.creator) {
-        io.to(matchId).emit('match', { action: 'leave' })
-        io.in(matchId).socketsLeave(matchId);
-        return delete matchs[matchId]
+        io.to(match.id).emit('match', { action: 'leave' })
+        io.in(match.id).socketsLeave(match.id);
+        return delete matchs[match.id]
     }
 
     socket.emit('match', { action: 'leave' })
-    socket.leave(matchId)
+    socket.leave(match.id)
 }
 
 function findMatch(socket) {
@@ -71,14 +74,24 @@ io.on('connection', socket => {
     })
 
     socket.on('match', data => {
-        if (data.action == "create") {
-            createMatch(socket)
-        } else if (data.action == "find") {
-            findMatch(socket)
-        } else if (data.action == "chat") {
-            io.to(data.match.id).emit("match", { action: "chat", author: socket.name, message: data.message })
-        } else if (data.action == "leave") {
-            leaveMatch(socket, data.match.id)
+        let match = matchs[socket.matchId]
+        
+        if(match) // If already in match
+        {
+            if (data.action == "chat") {
+                io.to(match.id).emit("match", { action: "chat", author: socket.name, message: data.message })
+            } else if (data.action == "leave") {
+                leaveMatch(socket, match.id)
+            } else if (data.action == "privacy") {
+                if(match.creator != socket.id) return;
+                match.privacy = data.privacy
+            }
+        } else { // If not in match
+            if (data.action == "create") {
+                createMatch(socket)
+            } else if (data.action == "find") {
+                findMatch(socket)
+            }
         }
     })
 
