@@ -1,9 +1,6 @@
 const { app, BrowserWindow } = require('electron')
 const path = require('path');
 
-const { io } = require('socket.io-client')
-const socket = io('http://localhost:3000/')
-
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
@@ -14,7 +11,7 @@ const createWindow = () => {
     }
   })
 
-  //win.setMenu(null)
+  win.setMenu(null)
 
   win.loadFile(path.join(__dirname, '/src/index.html'))
 }

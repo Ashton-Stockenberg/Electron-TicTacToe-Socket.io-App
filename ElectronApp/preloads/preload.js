@@ -1,5 +1,5 @@
 const io = require('socket.io-client');
-const socket = io(`http://10.45.76.113:3000/`);
+const socket = io(`http://localhost:3000/`);
 
 let match = null
 
@@ -52,7 +52,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Match
   startMatchBtn.addEventListener('click', () => {
-    socket.emit("match", { action: "start", match})
+    socket.emit("match", { action: "start", match })
   })
 
   chatForm.addEventListener("submit", (event) => {
@@ -67,7 +67,7 @@ window.addEventListener('DOMContentLoaded', () => {
   })
 
   privacyBtn.addEventListener("click", () => {
-    if(privacyBtn.value == "open"){
+    if (privacyBtn.value == "open") {
       privacyBtn.value = "closed"
       privacyBtn.innerText = "Lobby Is Closed"
       privacyBtn.classList.remove('btn-success')
@@ -97,7 +97,7 @@ window.addEventListener('DOMContentLoaded', () => {
       gameoverDiv.classList.add('d-none')
       gameboard.classList.add('d-none')
       playerList.classList.remove('d-none')
-      if(data.match.creator == socket.id) {
+      if (data.match.creator == socket.id) {
         startMatchBtn.classList.remove('d-none')
         privacyBtn.removeAttribute('disabled')
       } else {
@@ -107,17 +107,17 @@ window.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('.message').forEach(element => {
         element.remove()
       })
-      
+
       lobbyDiv.classList.add("d-none")
       matchDiv.classList.remove("d-none")
       match = data.match
-    } 
+    }
     else if (data.action == "chat") {
       let msg = document.createElement('div')
       msg.className = 'message'
       msg.innerHTML = `<p>${data.author}: ${data.message}</p>`
       messageDiv.insertBefore(msg, chatAnchor)
-    } 
+    }
     else if (data.action == "leave") {
       lobbyDiv.classList.remove("d-none")
       matchDiv.classList.add("d-none")
@@ -125,7 +125,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     else if (data.action == "update") {
       // lobby privacy
-      if(data.match.privacy == "closed"){
+      if (data.match.privacy == "closed") {
         privacyBtn.innerText = "Lobby Is Closed"
         privacyBtn.classList.remove('btn-success')
         privacyBtn.classList.add('btn-danger')
@@ -145,19 +145,17 @@ window.addEventListener('DOMContentLoaded', () => {
     else if (data.action == "start") {
       gameboard.innerHTML = ''
       startMatchBtn.classList.add('d-none')
-      for(let r = 0; r < 3; r++)
-      {
+      for (let r = 0; r < 3; r++) {
         let boardRow = document.createElement('div')
         boardRow.className = "gamerow"
-        for(let t = 0; t < 3; t++)
-        {
+        for (let t = 0; t < 3; t++) {
           let rowTile = document.createElement('div')
           rowTile.id = `r${r}t${t}`
           rowTile.className = "gametile"
           boardRow.appendChild(rowTile)
-          
+
           rowTile.addEventListener('click', () => {
-            socket.emit("match", { action: "player-move", match, move: {row: r, tile: t}})
+            socket.emit("match", { action: "player-move", match, move: { row: r, tile: t } })
           })
         }
         gameboard.appendChild(boardRow)
@@ -166,22 +164,19 @@ window.addEventListener('DOMContentLoaded', () => {
       gameboard.classList.remove('d-none')
       playerList.classList.add('d-none')
     }
-    else if(data.action == "updateBoard") {
-      for(let r = 0; r < 3; r++)
-      {
-        for(let t = 0; t < 3; t++)
-        {
+    else if (data.action == "updateBoard") {
+      for (let r = 0; r < 3; r++) {
+        for (let t = 0; t < 3; t++) {
           let tile = document.querySelector(`#r${r}t${t}`)
           tile.innerText = data.match.gameboard[r][t]
         }
       }
-    } 
-    else if(data.action == "winner") {
+    }
+    else if (data.action == "winner") {
       match = null
 
       let isWinner = data.winner.id == socket.id
-      if(isWinner)
-      {
+      if (isWinner) {
         gameoverText.innerHTML = 'Gameover You Won!'
         gameoverText.classList.remove('text-danger')
         gameoverText.classList.add('text-success')
@@ -190,7 +185,7 @@ window.addEventListener('DOMContentLoaded', () => {
         gameoverText.classList.add('text-danger')
         gameoverText.classList.remove('text-success')
       }
-      
+
       gameoverDiv.classList.remove('d-none')
     }
   })
