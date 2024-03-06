@@ -1,0 +1,30 @@
+#messages {
+    overflow-y: auto;
+    height: 200px;
+}
+
+#messages * {
+    overflow-anchor: none;
+}
+
+#anchor {
+    overflow-anchor: auto;
+    height: 1px;
+}
+
+.gamerow {
+    display: flex;
+}
+
+.gametile {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 3em;
+    width: 3em;
+    background-color: white;
+    border: solid 1px black;
+    color: black;
+    font-size: xx-large;
+}
